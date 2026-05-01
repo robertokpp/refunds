@@ -1,5 +1,18 @@
 import { useState } from "react";
 import { Input } from "./input";
+import { RefundItem } from "./RefundItem";
+import { CATEGORIES } from "../utils/categories";
+import { Button } from "./Button";
+
+import searchSvg from "../assets/search.svg";
+
+const REFUND_EXAMPLE = {
+  id: "123",
+  name: "roberto",
+  category: "Transporte",
+  amount: "232",
+  categoryIcon: CATEGORIES["transport"].icon,
+};
 
 export function Dashboard() {
   const [name, setName] = useState("");
@@ -21,7 +34,15 @@ export function Dashboard() {
           placeholder="Pesquisar pelo nome"
           onChange={(e) => setName(e.target.value)}
         />
+
+        <Button variant="icon" type="submit">
+          <img src={searchSvg} alt="Icon de busca" className="w-5" />
+        </Button>
       </form>
+
+      <div className="mt-6 flex flex-col gap-4 max-h-85.5 overflow-y-scroll">
+        <RefundItem data={REFUND_EXAMPLE} />
+      </div>
     </div>
   );
 }
