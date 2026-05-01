@@ -3,14 +3,15 @@ import { Input } from "./input";
 import { RefundItem } from "./RefundItem";
 import { CATEGORIES } from "../utils/categories";
 import { Button } from "./Button";
-
+import { formatCurrency } from "../utils/formatCurrency";
 import searchSvg from "../assets/search.svg";
+import { Pagination } from "./Pagination";
 
 const REFUND_EXAMPLE = {
   id: "123",
   name: "roberto",
   category: "Transporte",
-  amount: "232",
+  amount: formatCurrency(232),
   categoryIcon: CATEGORIES["transport"].icon,
 };
 
@@ -43,6 +44,8 @@ export function Dashboard() {
       <div className="mt-6 flex flex-col gap-4 max-h-85.5 overflow-y-scroll">
         <RefundItem data={REFUND_EXAMPLE} />
       </div>
+
+      <Pagination current={1} total={10}/>
     </div>
   );
 }
