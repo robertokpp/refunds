@@ -1,6 +1,14 @@
 import { useState } from "react";
+import { z, ZodError } from "zod";
+
 import { Button } from "../components/Button";
 import { Input } from "../components/input";
+
+const SignUpSchema = z.object({
+  name: z.string().min(1, { message: "Informe o nome" }),
+  email: z.email({ message: "Informe um email valido" }),
+  password: z.string().min(6, { message: "Senha deve ter menos 6 dígitos" }),
+}).refine((data) => data.password === data.passwordConfirm,); 
 
 export function SignUp() {
   const [name, setName] = useState("");
@@ -11,9 +19,23 @@ export function SignUp() {
 
   function onSubmit(e: React.SubmitEvent) {
     e.preventDefault();
-    alert("enviado");
+    try {
+      setIsLoading(true);
 
-    console.log(name, email, password, passwordConfirm);
+      const data = SignUpSchema.parse({
+        name,
+        email,
+        password,
+        passwordConfirm
+      });
+
+
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return alert(error.issues[0].message);
+      }
+    } finally {
+    }
   }
   return (
     <form onSubmit={onSubmit} className="w-full flex flex-col gap-4">
