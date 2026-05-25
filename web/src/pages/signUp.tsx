@@ -1,14 +1,22 @@
 import { useState } from "react";
-import { z, ZodError } from "zod";
-
+import { string, z, ZodError } from "zod";
+import { api } from "../services/api";
+import { AxiosError } from "axios";
 import { Button } from "../components/Button";
 import { Input } from "../components/input";
+import { useNavigate } from "react-router";
 
-const SignUpSchema = z.object({
-  name: z.string().min(1, { message: "Informe o nome" }),
-  email: z.email({ message: "Informe um email valido" }),
-  password: z.string().min(6, { message: "Senha deve ter menos 6 dígitos" }),
-}).refine((data) => data.password === data.passwordConfirm,); 
+const SignUpSchema = z
+  .object({
+    name: z.string().min(1, { message: "Informe o nome" }),
+    email: z.email({ message: "Informe um email valido" }),
+    password: z.string().min(6, { message: "Senha deve ter menos 6 dígitos" }),
+    passwordConfirm: string(),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "As senha nao sao iguais",
+    path: ["passwordConfirm"],
+  });
 
 export function SignUp() {
   const [name, setName] = useState("");
@@ -16,9 +24,11 @@ export function SignUp() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  function onSubmit(e: React.SubmitEvent) {
+  async function onSubmit(e: React.SubmitEvent) {
     e.preventDefault();
+
     try {
       setIsLoading(true);
 
@@ -26,13 +36,21 @@ export function SignUp() {
         name,
         email,
         password,
-        passwordConfirm
+        passwordConfirm,
       });
 
+      await api.post("/users", data);
 
+      if (confirm("Cadastrado com sucesso, Ir para tela de entrar?")) {
+        navigate("/");
+      }
     } catch (error) {
+      console.log(error);
       if (error instanceof ZodError) {
         return alert(error.issues[0].message);
+      }
+      if (error instanceof AxiosError) {
+        return alert(error.request?.data.message);
       }
     } finally {
     }
