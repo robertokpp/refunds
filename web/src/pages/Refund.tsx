@@ -1,11 +1,13 @@
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
 import fileSvg from "../assets/file.svg";
+import { api } from "../services/api";
 
 import { Input } from "../components/input";
 import { Select } from "../components/Select";
 import { Upload } from "../components/Upload";
 import { Button } from "../components/Button";
 
+import { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { z, ZodError } from "zod";
@@ -15,9 +17,11 @@ const refundsSchema = z.object({
     .string()
     .min(1, { message: " Informe um nome claro para sua solicitação " }),
   category: z.string().min(1, { message: "Informe a categoria" }),
-  amount: z.coerce.number({
-    message: "Informe um numero valido e superior a zero.",
-  }),
+  amount: z.coerce
+    .number({
+      message: "Informe um numero valido",
+    })
+    .positive({ message: "Informe um numero valido e superior a zero." }),
 });
 
 export function Refund() {
@@ -29,14 +33,15 @@ export function Refund() {
 
   const navigate = useNavigate();
   const params = useParams();
-  console.log(params.id);
+  // console.log(params.id);
 
-  function onSubmit(e: React.SubmitEvent) {
+  async function onSubmit(e: React.SubmitEvent) {
     e.preventDefault();
 
     if (params.id) {
       return navigate(-1);
     }
+
     try {
       setIsLoading(true);
 
@@ -46,12 +51,23 @@ export function Refund() {
         amount: amount.replace(",", "."),
       });
 
-      console.log(name, amount, category, filename);
-      //navigate("/confirm", { state: { fromSubmit: true } });
+      console.log(data);
+
+      await api.post("/refunds", {
+        ...data,
+        filename: "129387123987318923712893712893712.png",
+      });
+
+      navigate("/confirm", { state: { fromSubmit: true } });
     } catch (error) {
       console.log(error);
+
       if (error instanceof ZodError) {
         return alert(error.issues[0].message);
+      }
+
+      if (error instanceof AxiosError) {
+        return alert(error.response?.data.message);
       }
 
       alert("Não foi possível realizar a solicitação");
