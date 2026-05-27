@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router";
 
 import { AppLayout } from "../components/AppLayout";
-import { Refund } from "../pages/Refund";
+import { Refund } from "../pages/refund";
 import { NotFound } from "../pages/NotFound";
 
 export function EmployeeRoutes() {

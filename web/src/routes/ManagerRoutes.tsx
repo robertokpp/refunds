@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router";
 import { AppLayout } from "../components/AppLayout";
 import { Dashboard } from "../components/Dashboard";
 import { NotFound } from "../pages/NotFound";
-import { Refund } from "../pages/Refund";
+import { Refund } from "../pages/refund";
 
 export function ManagerRoutes() {
   return (

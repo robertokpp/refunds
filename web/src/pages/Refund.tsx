@@ -1,11 +1,24 @@
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
+import fileSvg from "../assets/file.svg";
+
 import { Input } from "../components/input";
 import { Select } from "../components/Select";
-import { useState } from "react";
 import { Upload } from "../components/Upload";
 import { Button } from "../components/Button";
+
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import fileSvg from "../assets/file.svg";
+import { z, ZodError } from "zod";
+
+const refundsSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: " Informe um nome claro para sua solicitação " }),
+  category: z.string().min(1, { message: "Informe a categoria" }),
+  amount: z.coerce.number({
+    message: "Informe um numero valido e superior a zero.",
+  }),
+});
 
 export function Refund() {
   const [name, setName] = useState("");
@@ -24,9 +37,27 @@ export function Refund() {
     if (params.id) {
       return navigate(-1);
     }
+    try {
+      setIsLoading(true);
 
-    console.log(name, amount, category, filename);
-    navigate("/confirm", { state: { fromSubmit: true } });
+      const data = refundsSchema.parse({
+        name,
+        category,
+        amount: amount.replace(",", "."),
+      });
+
+      console.log(name, amount, category, filename);
+      //navigate("/confirm", { state: { fromSubmit: true } });
+    } catch (error) {
+      console.log(error);
+      if (error instanceof ZodError) {
+        return alert(error.issues[0].message);
+      }
+
+      alert("Não foi possível realizar a solicitação");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
