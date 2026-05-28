@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Input } from "./input";
+import { Input } from "./Input";
 import { RefundItem, type RefundItemProps } from "./RefundItem";
 import { CATEGORIES } from "../utils/categories";
 import { Button } from "./Button";

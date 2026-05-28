@@ -3,7 +3,7 @@ import { string, z, ZodError } from "zod";
 import { api } from "../services/api";
 import { AxiosError } from "axios";
 import { Button } from "../components/Button";
-import { Input } from "../components/input";
+import { Input } from "../components/Input";
 import { useNavigate } from "react-router";
 
 const SignUpSchema = z

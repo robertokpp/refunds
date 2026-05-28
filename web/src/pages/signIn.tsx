@@ -1,5 +1,5 @@
 import { Button } from "../components/Button";
-import { Input } from "../components/input";
+import { Input } from "../components/Input";
 import { useActionState } from "react";
 import { z, ZodError } from "zod";
 import { api } from "../services/api";

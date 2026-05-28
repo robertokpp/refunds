@@ -2,7 +2,7 @@ import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
 import fileSvg from "../assets/file.svg";
 import { api } from "../services/api";
 
-import { Input } from "../components/input";
+import { Input } from "../components/Input";
 import { Select } from "../components/Select";
 import { Upload } from "../components/Upload";
 import { Button } from "../components/Button";

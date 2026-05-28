@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router";
 
-import { SignIn } from "../pages/signIn";
-import { SignUp } from "../pages/signUp";
+import { SignIn } from "../pages/SignIn";
+import { SignUp } from "../pages/SignUp";
 
 import { AuthLayout } from "../components/AuthLayout";
 import { NotFound } from "../pages/NotFound";
