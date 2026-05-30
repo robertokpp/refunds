@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router";
 
 import { AppLayout } from "../components/AppLayout";
-import { Dashboard } from "../components/Dashboard";
+import { Dashboard } from "../pages/Dashboard";
 import { NotFound } from "../pages/NotFound";
 import { Refund } from "../pages/Refund";
 
