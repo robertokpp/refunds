@@ -8,9 +8,10 @@ import { Upload } from "../components/Upload";
 import { Button } from "../components/Button";
 
 import { AxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { z, ZodError } from "zod";
+import { formatCurrency } from "../utils/formatCurrency";
 
 const refundsSchema = z.object({
   name: z
@@ -30,7 +31,7 @@ export function Refund() {
   const [amount, setAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-
+  const [fileURL, setFileURL] = useState<string | null>(null);
   const navigate = useNavigate();
   const params = useParams();
   // console.log(params.id);
@@ -85,6 +86,28 @@ export function Refund() {
     }
   }
 
+  async function fetchRefund(id: string) {
+    try {
+      const { data } = await api.get<RefundAPIResponse>(`/refunds/${id}`);
+
+      setName(data.name);
+      setCategory(data.category);
+      setAmount(formatCurrency(data.amount));
+      setFileURL(data.filename);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        return alert(error.response?.data.message);
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (params.id) {
+      fetchRefund(params.id);
+    }
+  }, [params.id]);
+
   return (
     <form
       onSubmit={onSubmit}
@@ -131,9 +154,9 @@ export function Refund() {
         />
       </div>
 
-      {params.id ? (
+      {params.id && fileURL ? (
         <a
-          href="https://www.google.com/?hl=pt_BR"
+          href={`http://localhost:3333/uploads/${fileURL}`}
           target="_blank"
           className="flex items-center justify-center gap-2 text-green-100 font-semibold my-6 hover:opacity-70 transition ease-linear"
         >

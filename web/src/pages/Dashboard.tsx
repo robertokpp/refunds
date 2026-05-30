@@ -74,6 +74,7 @@ export function Dashboard() {
     e.preventDefault();
     fetchRefunds();
   }
+  
   useEffect(() => {
     fetchRefunds();
   }, [page]);
